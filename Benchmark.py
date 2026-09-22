@@ -1,38 +1,69 @@
-def count_pairs_slow(numbers, target):
-    count = 0
-    for i in range(len(numbers)):
-        for j in range(i + 1, len(numbers)):
-            if numbers[i]  +  numbers[j]  ==  target:
-                count  += 1
-    return count
-def count_pairs_fast(numbers, target):
-    count = 0
+import time
+
+
+def has_duplicates_slow(data):
+    """
+    O(n^2)
+    Check every pair using nested loops.
+    """
+    for i in range(len(data)):
+        for j in range(i + 1, len(data)):
+            if data[i] == data[j]:
+                return True
+
+    return False
+
+
+def has_duplicates_fast(data):
+    """
+    O(n)
+    Use a set to track values already seen.
+    """
     seen = set()
-    for num in numbers:
-        needed = target - num
-        if needed in seen:
-            count += 1
-        seen.add(num)
-    return count    
-        
+
+    for value in data:
+        if value in seen:
+            return True
+
+        seen.add(value)
+
+    return False
 
 
 sizes = [1000, 5000, 10000]
 
-import time
+
 for size in sizes:
-    numbers = list(range(size))
-    target = size
+    data = list(range(size))
 
+    # Guaranteed duplicate at the end
+    data.append(0)
+
+    print(f"\n=== Size: {size} ===")
+
+    # Slow version
     start = time.perf_counter()
-    count_pairs_slow(numbers, target)
+
+    slow_result = has_duplicates_slow(data)
+
     end = time.perf_counter()
 
-    print(f"Slow - Size {size}: {end - start:.6f} seconds")
+    print(
+        f"Slow O(n^2): "
+        f"{slow_result} - "
+        f"{end - start:.6f} seconds"
+    )
 
+
+    # Fast version
     start = time.perf_counter()
-    count_pairs_fast(numbers, target)
+
+    fast_result = has_duplicates_fast(data)
+
     end = time.perf_counter()
 
-    print(f"Fast - Size {size}: {end - start:.6f} seconds")
-    print()
+    print(
+        f"Fast O(n): "
+        f"{fast_result} - "
+        f"{end - start:.6f} seconds"
+    )
